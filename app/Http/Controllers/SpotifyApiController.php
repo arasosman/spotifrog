@@ -19,7 +19,7 @@ class SpotifyApiController extends Controller
         $session = new \SpotifyWebAPI\Session(
             '295a07ba232f46ac8e0b95cc99fb259d',
             '0809b486d7e64231be376d9547d75c2f',
-            'http://spotify.hizmet.site/spotify-login'
+            'http://spotifrog.hizmet.site/apilogin'
         );
 
         if(isset($_GET['code'])){
@@ -133,9 +133,9 @@ class SpotifyApiController extends Controller
     public function prepareApi(){
 
         $session = new \SpotifyWebAPI\Session(
-            '178913f7690d44f89086f7d2e096107c',
-            '5c497e34fd7842a6beb5b87a1ae1307f',
-            'http://spotify.hizmet.site/spotify-login'
+            '295a07ba232f46ac8e0b95cc99fb259d',
+            '0809b486d7e64231be376d9547d75c2f',
+            'http://spotifrog.hizmet.site/apilogin'
         );
         $session->requestCredentialsToken();
         $accessToken = $session->getAccessToken();
@@ -145,123 +145,112 @@ class SpotifyApiController extends Controller
         return $api;
     }
 
-    public function searchTrack(Request $request){
-        if(!$request->has("term"))
-            return null;
-        // serach params control
-        $search_params = $request->input("term");
-        if(!isset($search_params["term"]))
-            return null;
+    public function search(Request $request){
+
+        if(!$request->has('the_obj'))
+            return "null";
+
+        $the_obj = json_decode($request->input('the_obj'));
         $api = $this->prepareApi();
 
-        $results = $api->search($search_params['term'], 'track');
-        $trackList= array();
-        //dd($results->tracks->items);
-        $count=0;
-        foreach ($results->tracks->items as $item) {
-            $trackList[$count]["artist"]= $item->artists[0]->name;
-            $trackList[$count]["track"]= $item->name;
-            $trackList[$count]["id"]= $item->id;
-            $count++;
+        $limit = 20;
+        if(isset($the_obj->limit) && $the_obj->limit > 0)
+            $limit= $the_obj->limit;
+
+        $results = "[]";
+        $query = "";
+        if($the_obj->keyword != ""){
+
+            $query = $the_obj->keyword;
+            $search_type_arr = "";
+            if(isset($the_obj->track) && $the_obj->track)
+                $search_type_arr .= "track,";
+            if(isset($the_obj->artist) && $the_obj->artist)
+                $search_type_arr .= "artist,";
+            if(isset($the_obj->album) && $the_obj->album)
+                $search_type_arr .= "album,";
+            if(isset($the_obj->playlist) && $the_obj->playlist)
+                $search_type_arr .= "playlist,";
+            if(isset($the_obj->date) && $the_obj->date != "")
+                $query.=" year:".$the_obj->date;
+
+            $search_type_arr = trim($search_type_arr,',');
+            $results = $api->search($query , $search_type_arr ,['limit' => $limit]);
+            if(isset($the_obj->artist)){
+                if((isset($the_obj->min_followers) && $the_obj->min_followers > 0)&&(isset($the_obj->max_followers) && $the_obj->max_followers > 0)){
+                    $results->artists->items = $this->followersCountSelect($results,$the_obj->min_followers,$the_obj->max_followers);
+                }elseif ((isset($the_obj->min_followers) && $the_obj->min_followers > 0)){
+                    $results->artists->items = $this->followersCountSelect($results,$the_obj->min_followers,-1);
+                }elseif ((isset($the_obj->max_followers) && $the_obj->max_followers > 0)){
+                    $results->artists->items = $this->followersCountSelect($results,-1,$the_obj->max_followers);
+                }
+            }
+            if(isset($the_obj->artist) || isset($the_obj->track)){
+                if($the_obj->min_pop >0 || $the_obj->max_pop < 100){
+
+                }
+            }
         }
-        return response()->json($trackList);
+
+        return response()->json($results);
     }
 
-    public function getTrack(Request $request){
-        if(!$request->has("id"))
-            return null;
-        // search params control
-        $id = $request->input("id");
+    private function followersCountSelect($result,$min,$max){
+        $return_arr = array();
+        if(isset($result->artists) && is_array($result->artists->items)){
+            foreach ($result->artists->items as $one_artist){
 
-        $api = $this->prepareApi();
-        $result = $api->getTrack($id);
-        return response()->json($result);
-    }
 
-    public function saveImage(Request $request){
-        if(!$request->has("src"))
-            return null;
-        $src= $request->input("src");
+                if($max >0 && $min >0){
+                    if($one_artist->followers->total > $min && $one_artist->followers->total < $max)
+                        $return_arr[] = $one_artist;
+                }else{
+                    if($min >0 && $one_artist->followers->total > $min){
+                        $return_arr[] = $one_artist;
+                    }
+                    elseif($max >0 && $one_artist->followers->total < $max){
+                        $return_arr[] = $one_artist;
+                    }
+                }
+            }
 
-        $filename = basename($src);
-        $newline = getcwd().'/img/poster/';
-        copy($src, $newline.$filename.'.jpg');
-        return 'img/poster/'.$filename.'.jpg';
-    }
-
-    public function getTrackByLink(Request $request){
-        if(!$request->has("link"))
-            return null;
-        $link = $request->input("link");
-
-        $api = $this->prepareApi();
-
-        if(preg_match("/track/",$link)){
-            $split_arr = preg_split('/track\//', $link);
-            $result = $api->getTrack($split_arr[1]);
-            return response()->json($result);
-        }else if(preg_match("/album/",$link)){
-            $split_arr = preg_split('/album\//', $link);
-            $result = $api->getAlbumTracks($split_arr[1]);
-            return response()->json($result->items[0]);
         }
+        return $return_arr;
     }
 
-    public function getPlaylist(){
+    public function getTrack($id){
+        $api = $this->prepareApi();
+        return $api->getTrack($id);
+    }
+
+    public function getPlaylist($id){
+        $api = $this->prepareApi();
+        return $api->getPlaylist($id);
+    }
+
+    public function getArtist($id){
+        $api = $this->prepareApi();
+        return $api->getArtist($id);
+    }
+
+    public function getArtistAlbums($id){
+        $api = $this->prepareApi();
+        return $api->getArtistAlbums($id);
+    }
+
+    public function getArtistRelatedArtists($id){
+        $api = $this->prepareApi();
+        return $api->getArtistRelatedArtists($id);
+    }
+
+    public function getArtistTopTracks($id,$country = "TR"){
+        $api = $this->prepareApi();
+        return $api->getArtistTopTracks($id,['country' => $country]);
+    }
+
+    public function test(){
         $api = $this->prepareApi();
         $result = $api->getPlaylist("08hpqbgt5B7JL6r1ocJqEd");
         return response()->json($result);
-    }
-
-    public function createPlaylist(Request $request){
-        $data = $request->input('data');
-        $data = json_encode($data);
-        DB::table('api-remember')->insert([
-            "type" => "createPlaylist",
-            "data" => $data
-        ]);
-        return redirect()->route('spotify-login');
-
-    }
-
-    public function addPlaylistTracks(Request $request){
-        $list = Playlist::where('date_type',2)->orderBy('id','desc')->first();
-        $items = PlaylistItem::where('list_id',$list->id)->get();
-        $tracks = array();
-        foreach ($items as $item){
-            $tracks[]=$item->item_id;
-        }
-        $data = json_encode($tracks);
-        DB::table('api-remember')->insert([
-            "type" => "addPlaylistTracks",
-            "data" => $data
-        ]);
-
-        return redirect()->route('spotify-login');
-    }
-
-    public function getPlaylistTrack(){
-        $api = $this->prepareApi();
-        $playlistTracks = $api->getPlaylistTracks('08hpqbgt5B7JL6r1ocJqEd');
-        $return_arr = array();
-        foreach ($playlistTracks->items as $track) {
-            $return_arr = $track->track;
-        }
-        print_r($return_arr);
-        //return response()->json($return_arr);
-    }
-
-    public function followList(){
-        DB::table('api-remember')->insert([
-            "type" => "followList"
-        ]);
-        return redirect()->route('spotify-login');
-    }
-
-    public function playTrack(Request $request,$track){
-        DB::table('api-remember')->insert([
-            "type" => "playTrack"
-        ]);
-        return redirect()->route('spotify-login');
     }
 }

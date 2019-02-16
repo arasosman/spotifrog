@@ -3,27 +3,22 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Spotify EE | @yield('title')</title>
+    <title>Spotifrog | @yield('title')</title>
     <meta name="description" content="{{ trans('global.description') }}">
     <meta name="keywords" content="{{ trans('global.description') }}">
-    <meta property="og:title" content="spotify ee">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://www.spotify.ee/">
-    <meta property="og:image" content="http://d2c87l0yth4zbw-2.global.ssl.fastly.net/i/_global/open-graph-default.png">
-    <meta property="og:description" content="Spotify is all the music you’ll ever need.">
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <link rel="shortcut icon" href="/img/favicon.png" type="image/x-icon">
-    <link rel="icon" href="/img/favicon.png" type="image/x-icon">
+    <link href="/assets/fonts/font-awesome.css" rel="stylesheet" type="text/css">
+    <link href="/assets/fonts/elegant-fonts.css" rel="stylesheet" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Lato:400,300,700,900,400italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.css" type="text/css">
+    <link rel="stylesheet" href="/assets/css/zabuto_calendar.min.css" type="text/css">
+    <link rel="stylesheet" href="/assets/css/owl.carousel.css" type="text/css">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/spot/images/touch-icon-144.png">
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/spot/images/touch-icon-114.png">
-    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/spot/images/touch-icon-72.png">
-    <link rel="apple-touch-icon-precomposed" href="/spot/images/touch-icon-57.png">
-    <link rel="stylesheet" type="text/css" href="/spot/css/app.css">
+    <link rel="stylesheet" href="/assets/css/jquery.nouislider.min.css" type="text/css">
+    <link rel="stylesheet" href="/assets/css/style.css" type="text/css">
 
 
     <!-- Page level javascript -->
@@ -34,33 +29,109 @@
         ]); ?>
     </script>
 </head>
-<body>
 
-<div id="content">
+<body class="nav-btn-only homepage">
+
+<div class="page-wrapper">
+    <header id="page-header">
+        <nav>
+            <div class="left">
+                <a href="/" class="brand"><img src="/assets/img/logo.png" alt=""></a>
+            </div>
+            <!--end left-->
+            <div class="right">
+                <div class="primary-nav has-mega-menu">
+                    <ul class="navigation">
+                        <li class="active "><a href="/">Home</a></li>
+                        <li><a href="/">Blog</a></li>
+                        <li><a href="/">Contact</a></li>
+                    </ul>
+                    <!--end navigation-->
+                </div>
+                <!--end primary-nav-->
+                <div class="secondary-nav">
+                    <a href="#" data-modal-external-file="modal_sign_in.php" data-target="modal-sign-in">Sign In</a>
+                    <a href="#" class="promoted" data-modal-external-file="modal_register.php" data-target="modal-register">Register</a>
+                </div>
+                <!--end secondary-nav-->
+                <a href="#" class="btn btn-primary btn-small btn-rounded icon shadow add-listing" data-modal-external-file="modal_submit.php" data-target="modal-submit"><i class="fa fa-plus"></i><span>Add listing</span></a>
+                <div class="nav-btn">
+                    <i></i>
+                    <i></i>
+                    <i></i>
+                </div>
+                <!--end nav-btn-->
+            </div>
+            <!--end right-->
+        </nav>
+        <!--end nav-->
+    </header>
+    <!--end page-header-->
+    {{--content area--}}
     @yield('content')
+
+    <!--end page-content-->
+
+    <footer id="page-footer">
+        <div class="footer-wrapper">
+            <div class="block">
+                <div class="container">
+                    <div class="vertical-aligned-elements">
+                        <div class="element width-50">
+                            <p data-toggle="modal" data-target="#myModal">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque aliquam at neque sit amet vestibulum. <a href="#">Terms of Use</a> and <a href="#">Privacy Policy</a>.</p>
+                        </div>
+                        <div class="element width-50 text-align-right">
+                            <a href="#" class="circle-icon"><i class="social_twitter"></i></a>
+                            <a href="#" class="circle-icon"><i class="social_facebook"></i></a>
+                            <a href="#" class="circle-icon"><i class="social_youtube"></i></a>
+                        </div>
+                    </div>
+                    <div class="background-wrapper">
+                        <div class="bg-transfer opacity-50">
+                            <img src="assets/img/footer-bg.png" alt="">
+                        </div>
+                    </div>
+                    <!--end background-wrapper-->
+                </div>
+            </div>
+            <div class="footer-navigation">
+                <div class="container">
+                    <div class="vertical-aligned-elements">
+                        <div class="element width-50">(C) 2019 Your Company, All right reserved</div>
+                        <div class="element width-50 text-align-right">
+                            <a href="index.html">Home</a>
+                            <a href="listing-grid-right-sidebar.html">Listings</a>
+                            <a href="submit.html">Submit Item</a>
+                            <a href="contact.html">Contact</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!--end page-footer-->
 </div>
+@include('layouts.front.modal')
+<!--end page-wrapper-->
+<a href="#" class="to-top scroll" data-show-after-scroll="600"><i class="arrow_up"></i></a>
 
-<footer class="container page-footer">
-    <div class="page-footer--col">
-        <ul class="nav nav-small">
-            <li>
-                <a href="#">Artists</a>
-            </li>
-            <li>
-                <a href="#">About Ads</a>
-            </li>
-        </ul>
-    </div>
-    <div class="page-footer--col">
-        <p>&copy; 2019 Spotify EE</p>
-    </div>
-</footer>
-
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-<script>window.jQuery || document.write('<script src="js/vendor/jquery-2.1.4.min.js"><\/script>')</script>
-<script src="/spot/js/main.min.js"></script>
-
+<script type="text/javascript" src="/assets/js/jquery-2.2.1.min.js"></script>
+<script type="text/javascript" src="/assets/js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="/assets/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/assets/js/bootstrap-select.min.js"></script>
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?key=AIzaSyBEDfNcQRmKQEyulDN8nGWjLYPm8s4YB58&libraries=places"></script>
+<script type="text/javascript" src="/assets/js/richmarker-compiled.js"></script>
+<script type="text/javascript" src="/assets/js/markerclusterer_packed.js"></script>
+<script type="text/javascript" src="/assets/js/infobox.js"></script>
+<script type="text/javascript" src="/assets/js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="/assets/js/jquery.fitvids.js"></script>
+<script type="text/javascript" src="/assets/js/moment.js"></script>
+<script type="text/javascript" src="/assets/js/bootstrap-datetimepicker.min.js"></script>
+<script type="text/javascript" src="/assets/js/icheck.min.js"></script>
+<script type="text/javascript" src="/assets/js/owl.carousel.min.js"></script>
+<script type="text/javascript" src="/assets/js/jquery.nouislider.all.min.js"></script>
+<script type="text/javascript" src="/assets/js/custom.js"></script>
+<script type="text/javascript" src="/assets/js/maps.js"></script>
 
 
 <!-- Page level javascript -->

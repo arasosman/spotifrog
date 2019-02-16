@@ -22,14 +22,20 @@ Route::resource('/register', 'Admin\HomeController@index');
 Route::group(['middleware' => ['throttle:60,1']], function () {
 
     Route::get('/', 'Front\HomeController@index')->name('home');
+    Route::get('/detail/{type}/{id}', 'Front\HomeController@detail')->name('detail');
+    Route::post('/search_data', 'SpotifyApiController@search')->name('search');
+
+    Route::get('/test','SpotifyApiController@test');
 
 });
 
 
-Route::group(['middleware' => ['auth','throttle:60,1'], 'prefix' => 'admin'], function () {
+Route::group(['middleware' => ['throttle:60,1'], 'prefix' => 'admin'], function () {
 
     Route::get('/', 'Admin\HomeController@index');
     Route::get('/my_profile', 'Admin\ProfileController@getProfile');
     Route::post('/my_profile', 'Admin\ProfileController@setProfile');
 
 });
+
+
