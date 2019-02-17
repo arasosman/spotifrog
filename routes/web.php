@@ -15,27 +15,20 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 Auth::routes();
+Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
 
 
 Route::resource('/register', 'Admin\HomeController@index');
 
-Route::group(['middleware' => ['throttle:60,1']], function () {
+Route::group(['middleware' => ['auth','throttle:60,1']], function () {
 
-    Route::get('/', 'Front\HomeController@index')->name('home');
-    Route::get('/detail/{type}/{id}', 'Front\HomeController@detail')->name('detail');
+    Route::get('/', 'Admin\HomeController@index')->name('home');
+    Route::get('/detail/{type}/{id}', 'Admin\HomeController@detail')->name('detail');
     Route::post('/search_data', 'SpotifyApiController@search')->name('search');
 
-    Route::get('/test','SpotifyApiController@test');
-
 });
 
+Route::get('/test','HomeController@test');
 
-Route::group(['middleware' => ['throttle:60,1'], 'prefix' => 'admin'], function () {
-
-    Route::get('/', 'Admin\HomeController@index');
-    Route::get('/my_profile', 'Admin\ProfileController@getProfile');
-    Route::post('/my_profile', 'Admin\ProfileController@setProfile');
-
-});
 
 

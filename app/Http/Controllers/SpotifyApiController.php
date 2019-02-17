@@ -171,8 +171,8 @@ class SpotifyApiController extends Controller
                 $search_type_arr .= "album,";
             if(isset($the_obj->playlist) && $the_obj->playlist)
                 $search_type_arr .= "playlist,";
-            if(isset($the_obj->date) && $the_obj->date != "")
-                $query.=" year:".$the_obj->date;
+            if(isset($the_obj->year) && $the_obj->year != "")
+                $query.=" year:".$the_obj->year;
 
             $search_type_arr = trim($search_type_arr,',');
             $results = $api->search($query , $search_type_arr ,['limit' => $limit]);
@@ -185,22 +185,48 @@ class SpotifyApiController extends Controller
                     $results->artists->items = $this->followersCountSelect($results,-1,$the_obj->max_followers);
                 }
             }
-            if(isset($the_obj->artist) || isset($the_obj->track)){
-                if($the_obj->min_pop >0 || $the_obj->max_pop < 100){
-
+            if($the_obj->hide_stat ==0){
+                if(isset($the_obj->artist) || isset($the_obj->track)){
+                    if($the_obj->popularity >0){
+                        if(isset($results->artists)){
+                            $results->artists->items = $this->populartySelect($results, $the_obj->popularity*10);
+                        }
+                        elseif(isset($results->tracks)){
+                            $results->tracks->items = $this->populartySelect($results, $the_obj->popularity*10);
+                        }
+                    }
                 }
             }
+
         }
 
         return response()->json($results);
+    }
+
+    private function populartySelect($result,$min_pop){
+
+        $return_arr = array();
+        if(isset($result->artists)){
+            foreach ($result->artists->items as $one_artist){
+                if($one_artist->popularity > $min_pop){
+                    $return_arr[] = $one_artist;
+                }
+            }
+        }elseif (isset($result->tracks)){
+            foreach ($result->tracks->items as $one_track){
+                if($one_track->popularity > $min_pop){
+                    $return_arr[] = $one_track;
+                }
+            }
+        }
+        return $return_arr;
+
     }
 
     private function followersCountSelect($result,$min,$max){
         $return_arr = array();
         if(isset($result->artists) && is_array($result->artists->items)){
             foreach ($result->artists->items as $one_artist){
-
-
                 if($max >0 && $min >0){
                     if($one_artist->followers->total > $min && $one_artist->followers->total < $max)
                         $return_arr[] = $one_artist;
@@ -223,11 +249,6 @@ class SpotifyApiController extends Controller
         return $api->getTrack($id);
     }
 
-    public function getPlaylist($id){
-        $api = $this->prepareApi();
-        return $api->getPlaylist($id);
-    }
-
     public function getArtist($id){
         $api = $this->prepareApi();
         return $api->getArtist($id);
@@ -246,6 +267,22 @@ class SpotifyApiController extends Controller
     public function getArtistTopTracks($id,$country = "TR"){
         $api = $this->prepareApi();
         return $api->getArtistTopTracks($id,['country' => $country]);
+    }
+
+
+    public function getAlbum($id){
+        $api = $this->prepareApi();
+        return $api->getAlbum($id);
+    }
+
+    public function getAlbumTracks($id){
+        $api = $this->prepareApi();
+        return $api->getAlbumTracks($id);
+    }
+
+    public function getPlaylist($id){
+        $api = $this->prepareApi();
+        return $api->getPlaylist($id);
     }
 
     public function test(){

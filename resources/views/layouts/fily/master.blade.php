@@ -17,7 +17,7 @@
     <!-- inject:css -->
     <link rel="stylesheet" href="/css/vertical-layout-dark/style.css">
     <!-- endinject -->
-    <link rel="shortcut icon" href="/images/favicon.png" />
+    <link rel="shortcut icon" href="/images/favicon.png"/>
 @yield('page_level_css')
 
 <!-- CSRF Script -->
@@ -32,8 +32,8 @@
     <!-- partial:partials/_navbar.html -->
     <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
         <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
-            <a class="navbar-brand brand-logo" href="index.html"><img src="/images/logo.svg" alt="logo"/></a>
-            <a class="navbar-brand brand-logo-mini" href="index.html"><img src="/images/logo-mini.svg" alt="logo"/></a>
+            <a class="navbar-brand brand-logo" href="/"><img src="/images/logo.svg" alt="logo"/></a>
+            <a class="navbar-brand brand-logo-mini" href="/"><img src="/images/logo-mini.svg" alt="logo"/></a>
         </div>
         @include('layouts.fily.header')
     </nav>
@@ -43,9 +43,20 @@
 
 
         @include('layouts.fily.left_menu')
-        <!-- partial -->
+        <div class="main-panel">
+            <!-- partial -->
         @yield('content')
         <!-- main-panel ends -->
+            <footer class="footer">
+                <div class="d-sm-flex justify-content-center justify-content-sm-between">
+                    <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2018 <a
+                            href="https://www.urbanui.com/" target="_blank">Urbanui</a>. All rights reserved.</span>
+                    <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Hand-crafted & made with <i
+                            class="mdi mdi-heart text-danger"></i></span>
+                </div>
+            </footer>
+            <!-- partial -->
+        </div>
     </div>
     <!-- page-body-wrapper ends -->
 </div>
@@ -70,7 +81,7 @@
 @yield('page_level_js')
 <!-- Document Ready javascript -->
 <script type="text/javascript">
-    $(document).ready(function(){
+    $(document).ready(function () {
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
