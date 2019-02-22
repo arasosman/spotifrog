@@ -1,4 +1,4 @@
-@extends('layouts.fily.master')
+@extends('layouts.master')
 
 @section('title')
     {{ trans('home.title') }}
@@ -20,7 +20,7 @@
                         <div class="row">
                             <div class="col-lg-4">
                                 <div class="border-bottom text-center pb-4">
-                                    <img src="{{$data->artist->images[1]->url}}" alt="profile"
+                                    <img src="{{ isset($data->artist->images[1]->url)?isset($data->artist->images[1]->url):"/images/not-found.png" }}" alt="profile"
                                          class="img-lg rounded-circle mb-3"/>
                                     <div class="mb-3">
                                         <h3>{{$data->artist->name}}</h3>

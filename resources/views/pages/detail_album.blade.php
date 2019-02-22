@@ -1,4 +1,4 @@
-@extends('layouts.fily.master')
+@extends('layouts.master')
 
 @section('title')
     {{ trans('home.title') }}

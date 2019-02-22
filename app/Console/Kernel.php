@@ -30,7 +30,20 @@ class Kernel extends ConsoleKernel
 
         })->hourly()->name('test')->withoutOverlapping();
 
+        $schedule->call(function(){
+            ScheduledTasks::addRelatedArtist();
+        })->everyMinute()->name('addRelatedArtist')->withoutOverlapping();
 
+        $schedule->call(function(){
+            ScheduledTasks::checkArtistListIfClaimed();
+        })->everyMinute()->name('checkArtistListIfClaimed')->withoutOverlapping();
+
+        $schedule->call(function(){
+            ScheduledTasks::fetchDetailInfoForUnclaimedArtist();
+        })->everyMinute()->name('fetchDetailInfoForUnclaimedArtist')->withoutOverlapping();
+
+        //crawling:150
+        //unclaimed:80
     }
 
     /**

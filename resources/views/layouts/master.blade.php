@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="/vendors/iconfonts/mdi/font/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="/vendors/css/vendor.bundle.base.css">
     <link rel="stylesheet" href="/vendors/css/vendor.bundle.addons.css">
+    <link rel="stylesheet" href="/css/wif_custom_style.css">
+
     <!-- endinject -->
     <!-- plugin css for this page -->
     <!-- End plugin css for this page -->
@@ -35,14 +37,14 @@
             <a class="navbar-brand brand-logo" href="/"><img src="/images/logo.svg" alt="logo"/></a>
             <a class="navbar-brand brand-logo-mini" href="/"><img src="/images/logo-mini.svg" alt="logo"/></a>
         </div>
-        @include('layouts.fily.header')
+        @include('layouts.header')
     </nav>
     <!-- partial -->
     <div class="container-fluid page-body-wrapper">
-        @include('layouts.fily.right_menu')
+        @include('layouts.right_menu')
 
 
-        @include('layouts.fily.left_menu')
+        @include('layouts.left_menu')
         <div class="main-panel">
             <!-- partial -->
         @yield('content')

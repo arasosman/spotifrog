@@ -67,10 +67,7 @@ class DataTable{
     }
 
     public function css(){
-        /* $datatable = '
-            <link rel="stylesheet" type="text/css" href="/css/plugins/dataTables/dataTables.bootstrap.css">
-            <link rel="stylesheet" type="text/css" href="/js/plugins/dataTables/buttons/css/buttons.dataTables.css">
-        '; */
+        return "";
 
         $datatable = '
             <link rel="stylesheet" type="text/css" href="/js/plugins/dataTables_new/media/css/dataTables.bootstrap.min.css">
@@ -102,7 +99,7 @@ class DataTable{
             <script type="text/javascript" language="javascript" src="/js/plugins/dataTables/buttons/js/buttons.print.js"></script>
         '; */
 
-        $datatable = '
+        /*$datatable = '
             <script type="text/javascript" language="javascript" 
                 src="/js/plugins/dataTables_new/media/js/jquery.dataTables.min.js">
             </script>
@@ -141,7 +138,7 @@ class DataTable{
             <script type="text/javascript" language="javascript" src="/js/plugins/select2/dist/js/new.min.js"></script>
             <script type="text/javascript" language="javascript" src="/js/fileinput/fileinput.min.js"></script>
 	        <script type="text/javascript" language="javascript" src="/js/fileinput/fileinput_locale_tr.js"></script>
-        ';
+        ';*/
     }
 
     public function ready(){
@@ -185,11 +182,6 @@ class DataTable{
                 "columns": [
                     '.$columns.'
                 ],
-                "rowCallback": function( row, data, index ) {
-                    if(data.change_flag == 1){
-                        $(\'td\', row).css(\'background-color\', \'pink\');
-                    }
-                },
                 "order": ['.$this->default_order.'],
                 "pagingType": "full_numbers",
                 dom: \'<"top"flB>rt<"bottom"ip><"clear">\',
@@ -295,8 +287,8 @@ class DataTable{
                 
                 $("#div_'. $this->prefix.'_table").find(".dt-buttons").remove();
                 
-                $("#'. $this->prefix.'_table_info,#'. $this->prefix.'_table_paginate").addClass("col-lg-6 col-md-6 col-xs-12 form-group");
-                $("#'. $this->prefix.'_table_paginate").css("text-align","right");
+                //$("#'. $this->prefix.'_table_info,#'. $this->prefix.'_table_paginate").addClass("col-lg-6 col-md-6 col-xs-12 form-group");
+                //$("#'. $this->prefix.'_table_paginate").css("text-align","right");
             
                 $("#'. $this->prefix.'_loading_div").hide();
                 $("#div_'. $this->prefix.'_table").show();
@@ -367,8 +359,8 @@ class DataTable{
                     
                     <div class="col-lg-1 col-md-12 col-xs-12 ">';
 
-        if ( $this->add_right) {
-            $return_value .='<button id="'.$this->prefix.'_add_new_button" type = "button" class="btn btn-sm btn-primary full-width" onclick ="'.$this->set_add_button .'();" ><i class="fa fa-plus" ></i > '.trans("admin.add_list").'</button >';
+        if ($this->add_right != false && Helper::has_right(Auth::user()->operations,  $this->add_right)) {
+            $return_value .='<button id="'.$this->prefix.'_add_new_button" type = "button" class="btn btn-sm btn-primary full-width" onclick ="'.$this->set_add_button .'();" ><i class="fa fa-plus" ></i > '.trans("global.add").'</button >';
         }
 
         $return_value .='</div></div><br>                

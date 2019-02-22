@@ -269,7 +269,6 @@ class SpotifyApiController extends Controller
         return $api->getArtistTopTracks($id,['country' => $country]);
     }
 
-
     public function getAlbum($id){
         $api = $this->prepareApi();
         return $api->getAlbum($id);
